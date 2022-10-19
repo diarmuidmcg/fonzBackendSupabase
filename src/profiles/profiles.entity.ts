@@ -8,9 +8,9 @@ import {
   JoinColumn,
   JoinTable,
 } from 'typeorm';
-import { Image } from 'src/images/image.entity';
+
 import { Events } from 'src/events/events.entity';
-import { Organizations } from 'src/organizations/organizations.entity';
+
 @Entity('profiles')
 export class Profiles extends BaseEntity {
   // separated these out incase we want to only diplay first name at some stage
@@ -42,12 +42,6 @@ export class Profiles extends BaseEntity {
   @Column({ type: 'varchar', length: 150, nullable: true })
   instagram_username: string;
 
-  @OneToMany(() => Image, (image) => image.profile, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  image: Image[];
-
   @OneToMany(() => Events, (event) => event.host, {
     onDelete: 'CASCADE',
   })
@@ -58,10 +52,4 @@ export class Profiles extends BaseEntity {
     onDelete: 'CASCADE',
   })
   attended_events: Events[];
-
-  @ManyToOne(() => Organizations, (org) => org.admins, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  organization: Organizations;
 }

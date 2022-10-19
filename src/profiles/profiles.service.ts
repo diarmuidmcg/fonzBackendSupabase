@@ -11,15 +11,11 @@ const validateEmail = (email) => {
   );
 };
 
-import { Organizations } from 'src/organizations/organizations.entity';
-
 @Injectable()
 export class ProfilesService {
   constructor(
     @InjectRepository(Profiles)
     private profilesRepository: Repository<Profiles>,
-    @InjectRepository(Organizations)
-    private organizationsRepository: Repository<Organizations>,
   ) {}
 
   async getProfiles(request, response): Promise<Profiles[]> {
@@ -91,22 +87,6 @@ export class ProfilesService {
     newProfile.auth_identifier = auth_identifier;
     newProfile.bio = bio !== null ? bio : '';
 
-    // set org
-    if (orgId != undefined) {
-      const organization = await this.organizationsRepository
-        .createQueryBuilder('organizations')
-        .where('organizations.id = :orgId', { orgId })
-        .getOne();
-
-      // make sure org exists
-      if (organization == undefined || organization == null)
-        return response.status(400).json({
-          error: `this organization (id ${orgId}) does not exist`,
-        });
-
-      newProfile.organization = organization;
-    }
-
     globalThis.Logger.log({ level: 'info', message: 'New Profile' });
     globalThis.Logger.log({
       level: 'info',
@@ -145,7 +125,7 @@ export class ProfilesService {
 
     const currentProfile = await this.profilesRepository
       .createQueryBuilder('profiles')
-      .leftJoinAndSelect('profiles.organization', 'organization')
+
       .where('profiles.id = :id', { id })
       .getOne();
 
@@ -182,22 +162,6 @@ export class ProfilesService {
     if (instagram_username != undefined)
       updatedProfile.instagram_username = instagram_username;
     if (bio != undefined) updatedProfile.bio = bio;
-
-    // set org
-    if (orgId != undefined) {
-      const organization = await this.organizationsRepository
-        .createQueryBuilder('organizations')
-        .where('organizations.id = :orgId', { orgId })
-        .getOne();
-
-      // make sure org exists
-      if (organization == undefined || organization == null)
-        return response.status(400).json({
-          error: `this organization (id ${orgId}) does not exist`,
-        });
-
-      updatedProfile.organization = organization;
-    }
 
     globalThis.Logger.log({ level: 'info', message: 'Update Profile' });
     globalThis.Logger.log({

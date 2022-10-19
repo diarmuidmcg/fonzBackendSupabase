@@ -4,20 +4,12 @@ import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 import { Events } from './events.entity';
 
-import { Image } from 'src/images/image.entity';
-import { ImagesService } from 'src/images/images.service';
-import { ImagesModule } from 'src/images/images.module';
-
 import { Profiles } from 'src/profiles/profiles.entity';
-import { Organizations } from 'src/organizations/organizations.entity';
 
 @Module({
-  imports: [
-    ImagesModule,
-    TypeOrmModule.forFeature([Events, Image, Profiles, Organizations]),
-  ],
+  imports: [TypeOrmModule.forFeature([Events, Profiles])],
   controllers: [EventsController],
-  providers: [EventsService, ImagesService],
+  providers: [EventsService],
   exports: [EventsService],
 })
 export class EventsModule {}

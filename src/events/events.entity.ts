@@ -8,9 +8,7 @@ import {
   JoinColumn,
   JoinTable,
 } from 'typeorm';
-import { Image } from 'src/images/image.entity';
 import { Profiles } from 'src/profiles/profiles.entity';
-import { Organizations } from 'src/organizations/organizations.entity';
 
 @Entity('events')
 export class Events extends BaseEntity {
@@ -32,12 +30,6 @@ export class Events extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @OneToMany(() => Image, (image) => image.event, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  image: Image[];
-
   @ManyToOne(() => Profiles, (profile) => profile.hosted_events, {
     onDelete: 'CASCADE',
   })
@@ -55,10 +47,4 @@ export class Events extends BaseEntity {
     },
   })
   attendees: Profiles[];
-
-  @ManyToOne(() => Organizations, (org) => org.hosted_events, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  organization: Organizations;
 }
